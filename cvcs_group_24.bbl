@@ -1,0 +1,134 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\datalist[entry]{none/global//global/global}
+  \entry{lam_dataset}{misc}{}
+    \name{author}{1}{}{%
+      {{hash=VP}{%
+         family={Vittorio},
+         familyi={V\bibinitperiod},
+         given={Pippi},
+         giveni={P\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{VP1}
+    \strng{fullhash}{VP1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+  \field{howpublished}{\url{https://www.kaggle.com/datasets/vpippi/lam-dataset}}
+    \field{title}{{LAM: Handwritten Italian Dataset}}
+  \endentry
+
+  \entry{faster_crnn}{misc}{}
+    \name{author}{4}{}{%
+      {{hash=RS}{%
+         family={Ren},
+         familyi={R\bibinitperiod},
+         given={Shaoqing},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=HK}{%
+         family={He},
+         familyi={H\bibinitperiod},
+         given={Kaiming},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=GR}{%
+         family={Girshick},
+         familyi={G\bibinitperiod},
+         given={Ross},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=SJ}{%
+         family={Sun},
+         familyi={S\bibinitperiod},
+         given={Jian},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{RSHKGR+1}
+    \strng{fullhash}{RSHKGRSJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{eprint}
+    \verb 1506.01497
+    \endverb
+    \field{title}{Faster R-CNN: Towards Real-Time Object Detection with Region
+  Proposal Networks}
+    \field{eprinttype}{arXiv}
+    \field{eprintclass}{cs.CV}
+    \field{year}{2016}
+  \endentry
+
+  \entry{CNN_RNN}{article}{}
+    \name{author}{3}{}{%
+      {{hash=SB}{%
+         family={Shi},
+         familyi={S\bibinitperiod},
+         given={Baoguang},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=BX}{%
+         family={Bai},
+         familyi={B\bibinitperiod},
+         given={Xiang},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=YC}{%
+         family={Yao},
+         familyi={Y\bibinitperiod},
+         given={Cong},
+         giveni={C\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{SBBXYC1}
+    \strng{fullhash}{SBBXYC1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1109/TPAMI.2016.2646371
+    \endverb
+    \field{title}{An End-to-End Trainable Neural Network for Image-Based
+  Sequence Recognition and Its Application to Scene Text Recognition}
+    \field{volume}{PP}
+    \field{journaltitle}{IEEE Transactions on Pattern Analysis and Machine
+  Intelligence}
+    \field{month}{07}
+    \field{year}{2015}
+  \endentry
+
+  \entry{opencv_lib}{article}{}
+    \name{author}{1}{}{%
+      {{hash=BG}{%
+         family={Bradski},
+         familyi={B\bibinitperiod},
+         given={G.},
+         giveni={G\bibinitperiod},
+      }}%
+    }
+    \keyw{bibtex-import}
+    \strng{namehash}{BG1}
+    \strng{fullhash}{BG1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{title}{{The OpenCV Library}}
+    \field{journaltitle}{Dr. Dobb's Journal of Software Tools}
+    \field{year}{2000}
+  \endentry
+\enddatalist
+\endinput

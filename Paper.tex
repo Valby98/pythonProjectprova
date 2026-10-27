@@ -1,0 +1,180 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[backend=bibtex,style=ieee]{biblatex}
+\addbibresource{reference.bib}
+\usepackage[acronym]{glossaries}
+\interfootnotelinepenalty=10000
+\graphicspath{ {./imgs/} }
+% Include other packages here, before hyperref.
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[breaklinks=true,bookmarks=false]{hyperref}
+\usepackage{color}
+
+\cvprfinalcopy % *** Uncomment this line for the final submission
+
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+%\ifcvprfinal\pagestyle{empty}\fi
+\setcounter{page}{1}
+
+\newglossaryentry{formula}
+{
+        name=formula,
+        description={A mathematical expression}
+}
+
+\newacronym{htr}{HTR}{Handwriting Text Recognition}
+\newacronym{lam}{LAM}{Ludovico Antonio Muratori}
+\newacronym{cnn}{CNN}{Convolutional Neural Network}
+\newacronym{rnn}{RNN}{Recurrent Neural Network}
+\newacronym{crnn}{CRNN}{Convolutional Recurrent Neural Network}
+\newacronym{wer}{WER}{Word Error Rate}
+\newacronym{xml}{XML}{Extensible Markup Language}
+\newacronym{rcnn}{Faster R-CNN}{Faster Region-based Convolutional Neural Network}
+\newacronym{ml}{ML}{Machine Learning}
+
+\begin{document}
+
+%%%%%%%%% TITLE
+\title{A CNN and RNN approach to handwritten text recognition}
+
+\author{Mannone Vito\\
+325554@studenti.unimore.it
+\and
+Rinaldi Michele\\
+260345@studenti.unimore.it
+\and
+Valbusa Manuel\\
+246139@studenti.unimore.it
+}
+
+\maketitle
+%\thispagestyle{empty}
+
+%%%%%%%%% ABSTRACT
+\section*{Abstract}
+\textit{
+\acrfull{htr} is not only a vital component of document digitalisation, but also an important computer vision task useful for historical, cultural, and linguistic research. This paper presents a comprehensive exploration of the development of two neural network for interpreting handwritten text from complete page images.
+}
+
+\textit{
+A central focus of this paper are the challenges intrinsic to \acrshort{htr}, including noise in the page or in the image containing the page and in the detection and extraction of the lines containing the actual text from the background. In this paper we want to analyse the performance of a combination of the state-of-art algorithms for \acrshort{htr}: \acrshort{rcnn} and \acrshort{crnn}.
+}
+
+\textit{
+Furthermore, the paper provides an in-depth examination of our implementation of a deep learning architecture to extract, a possibly correct, text from a full page image.
+}
+
+\textit{
+In conclusion, we analyse different variation of the used metrics to better evaluate our model and the performance of our model with respect to the training requirements.
+}
+
+%%%%%%%%% BODY TEXT
+\section{Introduction}
+The development of an effective neural network for \acrshort{htr} is highly task-dependent and dataset-dependent. Deep architectures must, in fact, consider the high variability intrinsic in this task. In this paper, we embark on a journey to construct a neural network finely tuned for dataset that may contain stamps (as noise in the pages), faded texts or even noise outside the image itself containing the useful data, i.e. the handwritten text.
+
+In second chapter we will discuss about the peculiarity of the chosen dataset\cite{lam_dataset} and about the preprocessing needed to manipulate the images for the architecture.
+
+In third chapter, it is described our main architecture for extracting text from a full page image. This is divided in two deep learning architectures: the first one aims to detect and extract the lines containing text from the image. For this task, a custom \acrfull{rcnn}\cite{faster_crnn} was used\footnote{Custom because it was also necessary to extract vertical or non horizontal lines of text}.\\
+The second architecture, is built for extracting text from a bounded image containing text of arbitrary length. In this case, literature is full of examples of character and text recognition from a boxed lines of text, such as \cite{CNN_RNN}, therefore a standard \acrshort{crnn} was used. In chapter 3, we will show our operating method to train both the architectures and the experiments conducted.
+
+The fourth chapter aims to demonstrate the evaluation methods used for confirming the models hyper-parameters and shows the metrics used.
+
+In chapter 5 we will discuss about the results of our experiments, focusing on the trade-off between the accuracy, the training requirements in terms of space and time.
+
+\section{Dataset and Preprocessing}
+For this project, the \acrshort{lam} dataset was used. This dataset contains a collection of handwritten papers from the italian writer Ludovico Antonio Muratori (1798 - 1837) which, due to the age of the documents used, are affected by a great amount of noise from paper and ink deterioration as shown in figures \ref{fig:ds_example1} and \ref{fig:non_masked}.
+This dataset contains both the full page images and the single line of text images. Each image is represented with its own ground truth.\\
+We used the full page images dataset to train the first deep architecture, while we used the single line images to train the second architecture. This allowed us to train both the architectures in parallel.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.35\textwidth]{ds_example1.jpg}
+\end{center}
+\caption{Image example from the LAM dataset}
+\label{fig:ds_example1}
+\end{figure}
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.35\textwidth]{non_masked_example.jpg}
+\end{center}
+\caption{Different image example from the LAM dataset}
+\label{fig:non_masked}
+\end{figure}
+
+Some images may contain a color palette, as shown in figure \ref{fig:non_masked}, others a black or coloured background. For this reason we had to remove the background, resize the images to contain only the papers and process the images to enhance the handwritten text. To do this, we implemented the simple algorithm shown in figure \ref{fig:preprocessing}.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.5\textwidth]{preprocessing}
+\end{center}
+\caption{Preprocessing pipeline}
+\label{fig:preprocessing}
+\end{figure}
+
+The output of this algorithm is shown in figure \ref{fig:masked_example}\footnote{This example is taken before the image to be cropped to better visualise the effects of the algorithm}. For this specific task (Background Removal), it is necessary that the paper represents the biggest square-like object in the image to be recognised as the main element. It is also assumed that there is a sufficient contrast between the foreground (paper to be cropped) and the background.\\
+Both these assumptions are correct for the considered dataset.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.35\textwidth]{masked_example}
+\end{center}
+\caption{Figure \ref{fig:non_masked} after the preprocessing}
+\label{fig:masked_example}
+\end{figure}
+
+It is important to highlight that the binarisation in the pipeline (figure \ref{fig:preprocessing}) is used only to obtain the contours of the paper using the \verb|drawContours()| function from the OpenCV\cite{opencv_lib} python library. In fact, for the deep network after the preprocessing stage, only the gray version of the cropped image is used.\\
+The blurring stage is obtained using a normalised box filter with a kernel size big enough to enhance the paper with respect to the background to be removed. In this case the kernel was chosen to be $ k = 40 $.
+
+The preprocessing stage had to be extended to the ground truth of the dataset. In fact, to train the first architecture, it was necessary to consider that the ground truth for the position of every box containing text was defined with respect to the original image. Therefore, even the ground truth had to be pre-processed to be aligned with the new cropped images.\\
+Every box containing text is defined, in the dataset, using these values (see figure \ref{fig:textbox}):
+\begin{enumerate}
+\itemsep0em
+\item Dimension as $ (h, w) \rightarrow $ height and width;
+\item Position of the first image pixel in the top left corner of the box of text, with respect to the first pixel in the top left corner of the image, as $ (x, y) $;
+\item Rotation as $ (\theta) $ is the angle between the first line of pixels of the image and the upper line of pixels of the text box.
+\end{enumerate}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.35\textwidth]{textbox_params}
+\end{center}
+\caption{Scheme of the values that represent the ground truth for the text boxes}
+\label{fig:textbox}
+\end{figure}
+Only the second values have to be processed because they depend on the first pixel of the original (not-cropped) image. The other ones, instead, remain the same because the image is being cropped without any rotation and without any variation of the ratio of the original image, therefore the angle $ \theta $ and the size of the box of text does not change.\\
+To obtain the new values $ (x', y') $ we must consider the position $ (k, l) $ of the first pixel in the top left corner of the new image with respect to the original image:
+\begin{equation}
+\begin{split}
+x' &= x - k \\
+y' &= y - l
+\end{split}
+\end{equation}
+
+This preprocessing stage was necessary only to train the first deep architecture. In fact, the chosen dataset also contains a set of every line of text present in every page. This other images will be used, as is, to train the second architecture. The only preprocessing used in this part concerns the color scale and the padding.
+
+\section{Architectures and Experiments}
+
+
+\section{Model Evaluation}
+
+\section{Conclusions}
+
+
+{\small
+\printbibliography
+}
+
+\end{document}
